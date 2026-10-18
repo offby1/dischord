@@ -17,13 +17,15 @@ Mention me with some chords and I'll reply with an MP3 of them strummed, one cho
 Example: `@{name} Am F C G7`
 
 **Chord syntax**
-\u2022 A chord is a **capital letter A-G**, an optional `#` or `b`, then an optional quality: `C`, `F#`, `Bb`
-\u2022 Qualities: `m` (minor), `7`, `maj7`, `m7`, `6`, `m6`, `9`, `m9`, `maj9`, `add9`, `sus2`, `sus4`, `7sus4`, `dim`, `dim7`, `m7b5`, `aug` (or `+`)
-\u2022 `5` makes a power chord (root and fifth only): `A5`, `D5`, `E5`
-\u2022 Slash chords put a different note in the bass: `D/F#`, `C/G`
+\u2022 A chord is a **capital letter A-G**, an optional `#` or `b`, then optional parts: `C`, `F#`, `Bb`
+\u2022 Quality: `m` (minor), `maj`, `dim`, `aug` (or `+`), `sus2`, `sus4` -- e.g. `Am`, `Dsus4`, `Bdim`
+\u2022 Numbers: `5` (power chord, root and fifth only), `6`, `7`, `9`, `11`, `13`, `6/9` -- e.g. `A5`, `G7`, `Cmaj7`, `Em9`
+\u2022 Extras: `add9`, `add11`, and alterations `b5 #5 b9 #9 #11 b13` -- e.g. `Cadd9`, `Bm7b5`, `C7#11`, `E7(b9)`
+\u2022 Slash chords put a different note in the bass: `D/F#`, `C7#11/F#`
 \u2022 Separate chords with spaces, commas or `|` -- `Am | F | C | G7` works fine
+\u2022 I know chord names only, not scale degrees or Nashville numbers like `1 4 5`.
 
-More about how chord names work: <https://en.wikipedia.org/wiki/Chord_notation> (I understand the common ones listed above, not everything on that page).
+More about how chord names work: <https://en.wikipedia.org/wiki/Chord_notation> (I understand the common ones, not every symbol on that page).
 
 **Tips**
 \u2022 Repeat a chord to strum it again: `A5 A5 D5 E5`
@@ -32,6 +34,7 @@ More about how chord names work: <https://en.wikipedia.org/wiki/Chord_notation> 
 \u2022 If I don't understand something, I'll tell you which word tripped me up.
 \u2022 I only listen when I'm mentioned, and ignore everything else."""
 
+_DEGREE = re.compile(r"^[b#]?\d+$")
 _MENTION = re.compile(r"<@[!&]?\d+>")
 
 
@@ -72,7 +75,8 @@ async def on_message(message):
     chords, bad = chords_from_message(message.content)
     if bad:
         shown = ", ".join(f"`{t[:20]}`" for t in bad[:5])
-        await message.reply(f"I couldn't read {shown} as a chord. " + SHORT_HELP.format(name=client.user.name),
+        note = " Those look like scale degrees, but I only know chord names." if all(_DEGREE.match(t) for t in bad) else ""
+        await message.reply(f"I couldn't read {shown} as a chord.{note} " + SHORT_HELP.format(name=client.user.name),
                             mention_author=False)
         return
     if not chords:

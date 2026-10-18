@@ -9,7 +9,8 @@ A Discord bot that plays chords.
 
 `demo.mp3` is what the bot sends for the input `A5 D E A5`.
 
-Understands `C`, `Cm`, `C7`, `Cmaj7`, `Cm7`, `Csus2`, `Csus4`, `Cdim`, `Caug`, `C5` (power chord),
+Understands major/minor/dim/aug/sus chords, power chords (`A5`), sixths, sevenths, ninths, elevenths and thirteenths,
+`6/9`, `add9`, alterations such as `b5`, `#11` and `b9` (for example `Cmaj7`, `A7sus2,13`, `C7#11/F#`, `E7(b9)`),
 `Cadd9`, `C9`, `Cm7b5`, slash chords like `D/F#`, and sharps/flats (`F#`, `Bb`). Chords can be
 separated by spaces, commas or `|`. At most 16 per message. `@Dischord help` shows the syntax.
 
