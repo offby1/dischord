@@ -33,14 +33,36 @@ To update after a `git pull`, run `docker compose up -d --build` again. The cont
 published ports (it only makes an outbound connection to Discord), restarts itself unless stopped,
 runs as a non-root user with a read-only filesystem, and is capped at 256 MB of memory.
 
-## Run with Docker "in prod"
+## Deploy to a remote Docker host
 
-Most of these steps only need to be done once, and I've already done them; but I'm pretty sure it's safe to do them again.
+Run these from your own machine, in a checkout of this repo. Docker builds and runs the bot on the
+remote host over SSH. You need key-based SSH access to the host, a Docker engine installed there,
+and an SSH user that is allowed to run `docker` (usually, a member of the `docker` group).
 
-    echo 'DISCORD_TOKEN=...' > .env
-    chmod 600 .env
-    docker context create collab --docker host=ssh://ubuntu@collab.offby1.info
+### One-time setup
+
+1. Create `.env` as described above, with your `DISCORD_TOKEN` in it and mode 600. Don't re-run
+   `echo ... > .env` over an existing file: that overwrites the token. The file stays on your
+   machine; Compose sends its contents to the remote host when it creates the container.
+2. Create a Docker context for the host (this fails harmlessly if it already exists). The
+   examples below call it `collab`, but any name will do:
+
+       docker context create collab --docker host=ssh://USER@HOST
+
+### Each deploy
+
+    git pull
     DOCKER_CONTEXT=collab docker compose up -d --build
+    DOCKER_CONTEXT=collab docker compose logs -f       # look for "Logged in as"
+
+To stop the bot: `DOCKER_CONTEXT=collab docker compose down`.
+
+Two things to keep in mind:
+
+- Stop any other running copy of the bot (say, one on your laptop) before deploying. Two instances
+  using the same token both answer every mention.
+- The token is stored in the container's configuration on the remote host, so anyone who can run
+  `docker inspect` there can read it.
 
 ## Test
 
