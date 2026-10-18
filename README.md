@@ -23,6 +23,16 @@ needs these channel permissions: View Channels, Send Messages, Attach Files, Rea
     export DISCORD_TOKEN=...   # from the Bot tab of the Developer Portal; never commit it
     python bot.py
 
+## Run with Docker
+
+    echo 'DISCORD_TOKEN=...' > .env && chmod 600 .env   # never commit this; it is in .gitignore
+    docker compose up -d --build
+    docker compose logs -f
+
+To update after a `git pull`, run `docker compose up -d --build` again. The container needs no
+published ports (it only makes an outbound connection to Discord), restarts itself unless stopped,
+runs as a non-root user with a read-only filesystem, and is capped at 256 MB of memory.
+
 ## Test
 
     uv pip install pytest && pytest

@@ -1,0 +1,8 @@
+.git
+.env
+.venv
+__pycache__
+.pytest_cache
+demo.mp3
+icon.*
+test_chords.py

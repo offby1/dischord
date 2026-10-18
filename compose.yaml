@@ -1,0 +1,13 @@
+services:
+  dischord:
+    build: .
+    restart: unless-stopped
+    env_file: .env            # contains DISCORD_TOKEN=...; see README
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
