@@ -33,6 +33,15 @@ To update after a `git pull`, run `docker compose up -d --build` again. The cont
 published ports (it only makes an outbound connection to Discord), restarts itself unless stopped,
 runs as a non-root user with a read-only filesystem, and is capped at 256 MB of memory.
 
+## Run with Docker "in prod"
+
+Most of these steps only need to be done once, and I've already done them; but I'm pretty sure it's safe to do them again.
+
+    echo 'DISCORD_TOKEN=...' > .env
+    chmod 600 .env
+    docker context create collab --docker host=ssh://ubuntu@collab.offby1.info
+    DOCKER_CONTEXT=collab docker compose up -d --build
+
 ## Test
 
     uv pip install pytest && pytest
