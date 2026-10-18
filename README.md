@@ -51,7 +51,7 @@ and an SSH user that is allowed to run `docker` (usually, a member of the `docke
 
 ### Each deploy
 
-    git pull                                           # Compose builds whatever is checked out here
+    git pull
     DOCKER_CONTEXT=collab docker compose up -d --build
     DOCKER_CONTEXT=collab docker compose logs -f       # look for "Logged in as"
 
